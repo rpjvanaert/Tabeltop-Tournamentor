@@ -9,6 +9,11 @@ import java.util.*;
 public class PureShuffler implements Shuffler {
 
     @Override
+    public String toString() {
+        return "Pure Shuffle";
+    }
+
+    @Override
     public List<GameGroup> shuffle(List<Player> players, List<Game> games) {
         players = new ArrayList<>(players);
         Collections.shuffle(players);

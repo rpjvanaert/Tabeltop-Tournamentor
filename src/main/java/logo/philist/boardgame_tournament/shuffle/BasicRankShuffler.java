@@ -7,6 +7,12 @@ import logo.philist.boardgame_tournament.model.Player;
 import java.util.*;
 
 public class BasicRankShuffler implements Shuffler {
+
+    @Override
+    public String toString() {
+        return "Basic Rank Shuffle";
+    }
+
     @Override
     public List<GameGroup> shuffle(List<Player> players, List<Game> games) {
         players = new ArrayList<>(players);

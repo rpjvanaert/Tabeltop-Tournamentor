@@ -8,6 +8,11 @@ import java.util.*;
 
 public class WeightedRankShuffler implements Shuffler {
 
+    @Override
+    public String toString() {
+        return "Weighted Rank Shuffle";
+    }
+
     private Player weightedRandomSelect(List<Player> players, Random rand) {
         int totalWeight = players.stream().mapToInt(Player::totalScore).sum();
         if (totalWeight <= 0) {
