@@ -34,8 +34,6 @@ public class BaseController {
 
     private ObservableList<Player> players = FXCollections.observableArrayList();
 
-    private List<Game> games = new ArrayList<>();
-
     @FXML
     public void initialize() {
         playerNameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
@@ -47,14 +45,6 @@ public class BaseController {
         table.setItems(players);
 
         loadPlayers();
-
-        this.games = List.of(
-                new Game("Catan", 2, 4),
-                new Game("Ticket to Ride", 2, 5),
-                new Game("Uno", 3, 10),
-                new Game("Exploding Kittens", 2, 4),
-                new Game("Chess", 2, 2)
-        );
     }
 
     public void loadPlayers() {
