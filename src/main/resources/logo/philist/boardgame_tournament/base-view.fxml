@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<VBox alignment="TOP_LEFT" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="logo.philist.boardgame_tournament.controller.BaseController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <HBox HBox.hgrow="ALWAYS" spacing="10.0">
+        <Button onAction="#onGenerateRound">Generate Round</Button>
+        <Button onAction="#onEditPlayers">Edit Players</Button>
+        <Button onAction="#onEditGames">Edit Games</Button>
+        <Button onAction="#onShowPointDistribution">Point Distribution</Button>
+        <Button onAction="#onReset" style="-fx-background-color: red; -fx-text-fill: white;">Reset</Button>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="playerNameColumn" text="Player Name" prefWidth="150"/>
+            <TableColumn fx:id="playerScoreColumn" text="Score" prefWidth="100"/>
+        </columns>
+
+    </TableView>
+
+    <HBox HBox.hgrow="ALWAYS" spacing="10.0">
+        <Button onAction="#onAddRound">Add Round</Button>
+        <Button onAction="#onRemoveLastRound">Remove Last Round</Button>
+        <Button onAction="#onShowStandings" alignment="CENTER_RIGHT">Show Standings</Button>
+    </HBox>
+</VBox>

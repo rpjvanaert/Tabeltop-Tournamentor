@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      spacing="10"
+      fx:controller="logo.philist.boardgame_tournament.controller.round.RoundController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <Button onAction="#onReroll" style="-fx-padding: 10;"> Reroll </Button>
+
+    <ListView fx:id="gameGroupsListView" layoutX="20" layoutY="20" prefWidth="560" prefHeight="360"/>
+
+</VBox>

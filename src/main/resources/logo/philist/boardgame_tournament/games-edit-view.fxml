@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="logo.philist.boardgame_tournament.controller.GamesEditController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox>
+        <Button onAction="#onSave"> Save </Button>
+        <Button text="Add" onAction="#onAddGame"/>
+        <Button text="Remove" onAction="#onRemoveGame"/>
+        <TableView fx:id="gameTable" editable="true">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name" prefWidth="300.0" editable="true"/>
+                <TableColumn fx:id="minPlayersColumn" text="Min #" prefWidth="150.0" editable="true"/>
+                <TableColumn fx:id="maxPlayersColumn" text="Max #" prefWidth="150.0" editable="true"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</AnchorPane>

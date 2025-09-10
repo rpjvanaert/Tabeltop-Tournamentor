@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.HBox?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="logo.philist.boardgame_tournament.controller.StandingsController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <LineChart fx:id="pointsChart" title="Points Over Rounds" HBox.hgrow="ALWAYS" >
+        <xAxis>
+            <NumberAxis fx:id="xAxis" label="Round" lowerBound="1" upperBound="10" tickUnit="1"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yAxis" label="Points" lowerBound="0" upperBound="100" tickUnit="1"/>
+        </yAxis>
+    </LineChart>
+
+</HBox>

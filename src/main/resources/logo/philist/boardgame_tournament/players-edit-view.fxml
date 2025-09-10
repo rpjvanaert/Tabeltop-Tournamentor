@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="logo.philist.boardgame_tournament.controller.PlayersEditController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox>
+        <Button onAction="#onSave"> Save </Button>
+        <TableView fx:id="playerTable" editable="true">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name" prefWidth="300.0" editable="true"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</AnchorPane>
