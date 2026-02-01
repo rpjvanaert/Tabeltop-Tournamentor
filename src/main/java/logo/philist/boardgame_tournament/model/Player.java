@@ -39,6 +39,13 @@ public class Player {
         recalculateTotal();
     }
 
+    public void removeLastRound() {
+        if (!roundScores.isEmpty()) {
+            roundScores.remove(roundScores.size() - 1);
+            recalculateTotal();
+        }
+    }
+
     @Override
     public String toString() {
         return name.get();

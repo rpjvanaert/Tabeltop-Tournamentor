@@ -30,7 +30,8 @@ public class RoundController {
                 new PureShuffler(),
                 new PairShuffler(),
                 new BasicRankShuffler(),
-                new WeightedRankShuffler()
+                new WeightedRankShuffler(),
+                new GroupShuffler()
         ));
     }
 

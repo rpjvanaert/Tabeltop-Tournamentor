@@ -150,19 +150,23 @@ public class BaseController {
     }
 
     @FXML
-    private void onReset() {
-        System.out.println("Reset tournament");
-    }
-
-    @FXML
     private void onAddRound() {
         addRound();
     }
 
     @FXML
     private void onRemoveLastRound() {
-        System.out.println("Remove last round");
+        int roundCount = table.getColumns().size() - 2;
+        if (roundCount > 1) {
+            table.getColumns().remove(table.getColumns().size() - 1);
+
+            for (Player player : players) {
+                player.removeLastRound();
+            }
+            table.refresh();
+        }
     }
+
 
     @FXML
     private void onShowStandings() {

@@ -20,7 +20,6 @@
         <Button onAction="#onEditPlayers">Edit Players</Button>
         <Button onAction="#onEditGames">Edit Games</Button>
         <Button onAction="#onShowPointDistribution">Point Distribution</Button>
-        <Button onAction="#onReset" style="-fx-background-color: red; -fx-text-fill: white;">Reset</Button>
     </HBox>
 
     <TableView fx:id="table" VBox.vgrow="ALWAYS">

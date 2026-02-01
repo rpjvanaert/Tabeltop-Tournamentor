@@ -26,7 +26,6 @@ public class PointDistributionController {
 
     @FXML
     private void onReroll() {
-        playerAmount++;
         Map<Integer, List<Integer>> distribution = generateCustomDistribution(playerAmount, 5, 4, 4);
         plotDistributionTable(distribution);
     }
