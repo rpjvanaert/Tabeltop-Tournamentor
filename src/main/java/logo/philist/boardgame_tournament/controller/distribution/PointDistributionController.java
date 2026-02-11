@@ -49,6 +49,7 @@ public class PointDistributionController {
             }
         });
         playerCountCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPlayerCount()));
+        playerCountCol.setReorderable(false);
         pointsTable.getColumns().add(playerCountCol);
 
         int maxRanks = distribution.values().stream().mapToInt(List::size).max().orElse(0);
@@ -60,6 +61,7 @@ public class PointDistributionController {
                 List<Integer> points = data.getValue().getPoints();
                 return new SimpleObjectProperty<>(rank < points.size() ? points.get(rank) : null);
             });
+            rankCol.setReorderable(false);
             pointsTable.getColumns().add(rankCol);
         }
 

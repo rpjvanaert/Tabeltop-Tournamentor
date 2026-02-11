@@ -11,7 +11,7 @@
             fx:controller="logo.philist.boardgame_tournament.controller.distribution.PointDistributionController"
             prefHeight="400.0" prefWidth="600.0">
 
-    <Button onAction="#onReroll" text="Reroll" />
+<!--    <Button onAction="#onReroll" text="Reroll" />-->
 
     <TableView fx:id="pointsTable">
 
