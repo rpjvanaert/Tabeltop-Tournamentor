@@ -2,6 +2,7 @@ package logo.philist.boardgame_tournament.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +21,7 @@ import logo.philist.boardgame_tournament.storage.Storage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BaseController {
 
@@ -206,6 +208,13 @@ public class BaseController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void onFillRoundScores() {
+        Random random = new Random();
+        for (Player player : players) {
+            player.setRoundScore(player.getRoundScores().size() - 1, random.nextInt(10));
         }
     }
 }

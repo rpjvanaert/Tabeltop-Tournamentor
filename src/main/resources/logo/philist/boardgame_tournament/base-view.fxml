@@ -32,6 +32,7 @@
 
     <HBox HBox.hgrow="ALWAYS" spacing="10.0">
         <Button onAction="#onAddRound">Add Round</Button>
+<!--        <Button onAction="#onFillRoundScores">Fill Round Scores</Button>-->
         <Button onAction="#onRemoveLastRound">Remove Last Round</Button>
         <Button onAction="#onShowStandings" alignment="CENTER_RIGHT">Show Standings</Button>
     </HBox>
