@@ -2,7 +2,6 @@ package logo.philist.boardgame_tournament.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,14 +13,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logo.philist.boardgame_tournament.controller.distribution.PointDistributionController;
 import logo.philist.boardgame_tournament.controller.round.RoundController;
-import logo.philist.boardgame_tournament.model.Game;
 import logo.philist.boardgame_tournament.model.Player;
 import logo.philist.boardgame_tournament.storage.Storage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class BaseController {
 
@@ -212,9 +207,10 @@ public class BaseController {
     }
 
     public void onFillRoundScores() {
-        Random random = new Random();
+        int i = 0;
         for (Player player : players) {
-            player.setRoundScore(player.getRoundScores().size() - 1, random.nextInt(10));
+            player.setRoundScore(player.getRoundScores().size() - 1, i++);
+            if (i > 10) i = 0;
         }
     }
 }
