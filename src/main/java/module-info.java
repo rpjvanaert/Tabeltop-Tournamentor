@@ -16,4 +16,5 @@ module logo.philist.boardgame_tournament {
     exports logo.philist.boardgame_tournament.controller.distribution;
     opens logo.philist.boardgame_tournament.controller.distribution to javafx.fxml;
     exports logo.philist.boardgame_tournament.model;
+    opens logo.philist.boardgame_tournament.model to com.fasterxml.jackson.databind;
 }

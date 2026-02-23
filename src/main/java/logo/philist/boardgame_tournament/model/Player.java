@@ -1,5 +1,7 @@
 package logo.philist.boardgame_tournament.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +24,23 @@ public class Player {
     public IntegerProperty totalScoreProperty() { return totalScore; }
     public ObservableList<IntegerProperty> getRoundScores() { return roundScores; }
 
+    @JsonCreator
+    public Player(@JsonProperty("name") String name, @JsonProperty("roundScores") int[] roundScores) {
+        this.name.set(name);
+        for (int score : roundScores) {
+            this.roundScores.add(new SimpleIntegerProperty(score));
+        }
+        recalculateTotal();
+    }
+
+    @JsonProperty("name")
+    public String getName() { return name.get(); }
+
+    @JsonProperty("roundScores")
+    public int[] getRoundScoresArray() {
+        return roundScores.stream().mapToInt(IntegerProperty::get).toArray();
+    }
+
     public int totalScore() { return totalScore.get(); }
 
     public void setRoundScore(int round, int score) {
@@ -40,10 +59,18 @@ public class Player {
     }
 
     public void removeLastRound() {
-        if (!roundScores.isEmpty()) {
-            roundScores.remove(roundScores.size() - 1);
+        if (!roundScores.isEmpty() && roundScores.size() > 1) {
+            roundScores.removeLast();
             recalculateTotal();
         }
+    }
+
+    public void resetScores() {
+        while (!roundScores.isEmpty()) {
+            roundScores.removeLast();
+        }
+        roundScores.add(new SimpleIntegerProperty(0));
+        recalculateTotal();
     }
 
     @Override

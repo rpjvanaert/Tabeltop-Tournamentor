@@ -12,6 +12,7 @@
 
     <VBox>
         <Button onAction="#onSave"> Save </Button>
+        <Button onAction="#onAdd"> Add </Button>
         <TableView fx:id="playerTable" editable="true">
             <columns>
                 <TableColumn fx:id="nameColumn" text="Name" prefWidth="300.0" editable="true"/>

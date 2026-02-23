@@ -2,8 +2,10 @@ package logo.philist.boardgame_tournament.storage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import logo.philist.boardgame_tournament.model.Game;
+import logo.philist.boardgame_tournament.model.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,6 +39,28 @@ public class Storage {
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, players);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void savePlayersObjects(List<Player> players) {
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(PLAYERS_PATH), players);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static List<Player> loadPlayerObjects() {
+        try {
+            File file = new File(PLAYERS_PATH);
+            if (!file.exists()) {
+                return new ArrayList<>();
+            }
+            return Arrays.asList(mapper.readValue(file, Player[].class));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 

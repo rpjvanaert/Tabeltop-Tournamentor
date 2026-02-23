@@ -3,6 +3,7 @@ package logo.philist.boardgame_tournament.controller;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,6 +11,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import logo.philist.boardgame_tournament.model.Player;
 import logo.philist.boardgame_tournament.storage.Storage;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayersEditController {
@@ -61,7 +63,12 @@ public class PlayersEditController {
 
     @FXML
     public void onSave() {
-        Storage.savePlayers(playerTable.getItems());
+        List<Player> players = playerTable.getItems().stream().map(Player::new).toList();
+        Storage.savePlayersObjects(players);
         baseController.loadPlayers();
+    }
+
+    public void onAdd() {
+        playerTable.getItems().add("");
     }
 }

@@ -2,6 +2,7 @@ package logo.philist.boardgame_tournament.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -36,21 +37,29 @@ public class BaseController {
         playerNameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
         playerScoreColumn.setCellValueFactory(data -> data.getValue().totalScoreProperty().asObject());
 
-        addRound();
         table.setEditable(true);
 
         table.setItems(players);
 
         loadPlayers();
+
+        int rounds = players.getLast().getRoundScoresArray().length;
+        for (int i = 0; i < rounds; i++) {
+            addRoundColumn();
+        }
     }
 
     public void loadPlayers() {
-        players.setAll(Storage.loadPlayers().stream().map(Player::new).toList());
+        players.setAll(Storage.loadPlayerObjects());
     }
 
     private void addRound() {
         this.players.forEach(Player::addRound);
 
+        addRoundColumn();
+    }
+
+    private void addRoundColumn() {
         int roundIndex = table.getColumns().size() - 2;
         TableColumn<Player, Number> roundCol = new TableColumn<>("Round " + (roundIndex + 1));
         roundCol.setCellValueFactory(data -> data.getValue().getRoundScores().get(roundIndex));
@@ -155,7 +164,7 @@ public class BaseController {
     private void onRemoveLastRound() {
         int roundCount = table.getColumns().size() - 2;
         if (roundCount > 1) {
-            table.getColumns().remove(table.getColumns().size() - 1);
+            table.getColumns().removeLast();
 
             for (Player player : players) {
                 player.removeLastRound();
@@ -212,5 +221,27 @@ public class BaseController {
             player.setRoundScore(player.getRoundScores().size() - 1, i++);
             if (i > 10) i = 0;
         }
+    }
+
+    public void onSaveTournament() {
+        Storage.savePlayersObjects(players);
+    }
+
+    public void onResetScores() {
+        int roundCount = table.getColumns().size() - 2;
+        while (roundCount > 1) {
+            table.getColumns().removeLast();
+            roundCount--;
+
+            for (Player player : players) {
+                player.removeLastRound();
+            }
+            table.refresh();
+        }
+
+        for (Player player : players) {
+            player.resetScores();
+        }
+        table.refresh();
     }
 }
