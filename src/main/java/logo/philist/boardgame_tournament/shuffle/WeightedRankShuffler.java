@@ -14,20 +14,23 @@ public class WeightedRankShuffler implements Shuffler {
     }
 
     private Player weightedRandomSelect(List<Player> players, Random rand) {
-        int totalWeight = players.stream().mapToInt(Player::totalScore).sum();
+        int totalWeight = players.stream().mapToInt(Player::totalScore).map(WeightedRankShuffler::calcWeight).sum();
         if (totalWeight <= 0) {
-            // Fallback: select a random player uniformly
             return players.get(rand.nextInt(players.size()));
         }
         int r = rand.nextInt(totalWeight);
         int cumulative = 0;
         for (Player p : players) {
-            cumulative += p.totalScore();
+            cumulative += calcWeight(p.totalScore());
             if (r < cumulative) {
                 return p;
             }
         }
-        return players.get(players.size() - 1); // fallback
+        return players.get(players.size() - 1);
+    }
+
+    private static int calcWeight(int i) {
+        return (int) Math.pow(i, 2.5);
     }
 
     @Override
