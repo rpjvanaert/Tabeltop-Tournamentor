@@ -9,20 +9,21 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <VBox alignment="TOP_LEFT" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="logo.philist.boardgame_tournament.controller.BaseController">
+      fx:controller="logo.philist.boardgame_tournament.controller.BaseController"
+        fx:id="rootVbox">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
-    <HBox HBox.hgrow="ALWAYS" spacing="10.0">
+    <HBox HBox.hgrow="ALWAYS" spacing="10.0" fx:id="topHeader">
         <Button onAction="#onGenerateRound">Generate Round</Button>
         <Button onAction="#onEditPlayers">Edit Players</Button>
         <Button onAction="#onEditGames">Edit Games</Button>
         <Button onAction="#onShowPointDistribution">Point Distribution</Button>
     </HBox>
 
-    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" minHeight="0">
         <columns>
             <TableColumn fx:id="playerNameColumn" text="Player Name" prefWidth="150"/>
             <TableColumn fx:id="playerScoreColumn" text="Score" prefWidth="100"/>
@@ -30,7 +31,7 @@
 
     </TableView>
 
-    <HBox HBox.hgrow="ALWAYS" spacing="10.0">
+    <HBox HBox.hgrow="ALWAYS" spacing="10.0" fx:id="bottomHeader">
         <Button onAction="#onSaveTournament">Save</Button>
         <Button onAction="#onAddRound">Add Round</Button>
         <Button onAction="#onFillRoundScores">Fill Round Scores</Button>

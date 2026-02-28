@@ -1,8 +1,8 @@
 package logo.philist.boardgame_tournament.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logo.philist.boardgame_tournament.controller.distribution.PointDistributionController;
@@ -20,6 +22,13 @@ import logo.philist.boardgame_tournament.storage.Storage;
 import java.io.IOException;
 
 public class BaseController {
+
+    @FXML
+    private VBox rootVbox;
+    @FXML
+    private HBox topHeader;
+    @FXML
+    private HBox bottomHeader;
 
     @FXML
     private TableView<Player> table;
@@ -37,9 +46,7 @@ public class BaseController {
         playerNameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
         playerScoreColumn.setCellValueFactory(data -> data.getValue().totalScoreProperty().asObject());
 
-        table.setEditable(true);
-
-        table.setItems(players);
+        setupTable();
 
         loadPlayers();
 
@@ -47,6 +54,38 @@ public class BaseController {
         for (int i = 0; i < rounds; i++) {
             addRoundColumn();
         }
+    }
+
+    private void setupTable() {
+        table.setEditable(true);
+        table.setMinHeight(0);
+
+        table.setFixedCellSize(24);
+        table.fixedCellSizeProperty().bind(Bindings.createDoubleBinding(() -> {
+            int rows = Math.max(1, players.size());
+            double headerReserve = 50.0;
+            double available = Math.max(0, table.getHeight() - headerReserve);
+            double size = available / rows;
+            double minRowHeight = 24.0;
+            return Math.max(minRowHeight, size);
+        }, table.heightProperty(), Bindings.size(players)));
+
+        final double fontFactor = 0.45;
+        final double minFont = 10.0;
+        final double maxFont = 24.0;
+
+        Runnable applyFontSize = () -> {
+            double cellSize = table.getFixedCellSize();
+            if (cellSize <= 0) return;
+            double fontSize = Math.clamp(cellSize * fontFactor, minFont, maxFont);
+            table.setStyle("-fx-font-size: " + String.format("%.1f", fontSize) + "px;");
+        };
+
+        applyFontSize.run();
+
+        table.fixedCellSizeProperty().addListener((obs, oldV, newV) -> applyFontSize.run());
+
+        table.setItems(players);
     }
 
     public void loadPlayers() {
@@ -61,7 +100,7 @@ public class BaseController {
 
     private void addRoundColumn() {
         int roundIndex = table.getColumns().size() - 2;
-        TableColumn<Player, Number> roundCol = new TableColumn<>("Round " + (roundIndex + 1));
+        TableColumn<Player, Number> roundCol = new TableColumn<>("R#" + (roundIndex + 1));
         roundCol.setCellValueFactory(data -> data.getValue().getRoundScores().get(roundIndex));
         roundCol.setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.NumberStringConverter()));
         roundCol.setOnEditCommit(event -> {
@@ -69,6 +108,9 @@ public class BaseController {
             player.setRoundScore(roundIndex, event.getNewValue().intValue());
         });
         roundCol.setEditable(true);
+
+        roundCol.minWidthProperty().bind(table.fixedCellSizeProperty());
+
         table.getColumns().add(roundCol);
     }
 
