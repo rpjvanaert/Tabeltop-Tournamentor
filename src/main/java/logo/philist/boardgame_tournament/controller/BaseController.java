@@ -60,7 +60,7 @@ public class BaseController {
         table.setEditable(true);
         table.setMinHeight(0);
 
-        table.setFixedCellSize(24);
+        //table.setFixedCellSize(24);
         table.fixedCellSizeProperty().bind(Bindings.createDoubleBinding(() -> {
             int rows = Math.max(1, players.size());
             double headerReserve = 50.0;
@@ -90,6 +90,8 @@ public class BaseController {
 
     public void loadPlayers() {
         players.setAll(Storage.loadPlayerObjects());
+
+        setupTable();
     }
 
     private void addRound() {

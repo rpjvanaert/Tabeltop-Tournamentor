@@ -25,7 +25,7 @@
 
     <TableView fx:id="table" VBox.vgrow="ALWAYS" minHeight="0">
         <columns>
-            <TableColumn fx:id="playerNameColumn" text="Player Name" prefWidth="150"/>
+            <TableColumn fx:id="playerNameColumn" text="Player Name" prefWidth="200"/>
             <TableColumn fx:id="playerScoreColumn" text="Score" prefWidth="100"/>
         </columns>
 
