@@ -36,36 +36,18 @@ public class PointDistributionController {
         pointsTable.getItems().clear();
         pointsTable.getColumns().clear();
 
-        TableColumn<PointsRow, Integer> playerCountCol = new TableColumn<>("# Players");
-        playerCountCol.setCellFactory(column -> new TableCell<PointsRow, Integer>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(item.toString());
-                    setStyle("-fx-background-color: #e0e0e0; -fx-font-weight: bold;");
-                }
-            }
-        });
-        playerCountCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPlayerCount()));
-        playerCountCol.setReorderable(false);
+        TableColumn<PointsRow, Integer> playerCountCol = makePlayerCountCol();
         pointsTable.getColumns().add(playerCountCol);
 
         int maxRanks = distribution.values().stream().mapToInt(List::size).max().orElse(0);
 
         for (int i = 0; i < maxRanks; i++) {
-            final int rank = i;
-            TableColumn<PointsRow, Integer> rankCol = new TableColumn<>("#" + (rank + 1));
-            rankCol.setCellValueFactory(data -> {
-                List<Integer> points = data.getValue().getPoints();
-                return new SimpleObjectProperty<>(rank < points.size() ? points.get(rank) : null);
-            });
-            rankCol.setReorderable(false);
+            TableColumn<PointsRow, Integer> rankCol = makeRankCol(i);
             pointsTable.getColumns().add(rankCol);
         }
+
+        TableColumn<PointsRow, Integer> sharedLosersCol = makeSharedLosersCol();
+        pointsTable.getColumns().add(sharedLosersCol);
 
         List<PointsRow> rows = distribution.entrySet().stream()
                 .map(e -> new PointsRow(e.getKey(), e.getValue()))
@@ -80,6 +62,64 @@ public class PointDistributionController {
                         .multiply(pointsTable.fixedCellSizeProperty())
                         .add(headerOffset)
         );
+    }
+
+    private static TableColumn<PointsRow, Integer> makeRankCol(int i) {
+        final int rank = i;
+        TableColumn<PointsRow, Integer> rankCol = new TableColumn<>("#" + (rank + 1));
+        rankCol.setCellValueFactory(data -> {
+            List<Integer> points = data.getValue().getPoints();
+            return new SimpleObjectProperty<>(rank < points.size() ? points.get(rank) : null);
+        });
+        rankCol.setReorderable(false);
+        return rankCol;
+    }
+
+    private static TableColumn<PointsRow, Integer> makeSharedLosersCol() {
+        TableColumn<PointsRow, Integer> sharedLosersCol = new TableColumn<>("SL");
+        sharedLosersCol.setCellValueFactory(data -> {
+            PointsRow row = data.getValue();
+            List<Integer> points = row.getPoints();
+            int players = row.getPlayerCount();
+            if (points == null || players < 2) {
+                return new SimpleObjectProperty<>(null);
+            }
+            int sumRest = 0;
+            int limit = Math.min(points.size(), players);
+            for (int i = 1; i < limit; i++) {
+                sumRest += points.get(i);
+            }
+            int losersCount = players - 1;
+            int avg = losersCount > 0 ? (sumRest / losersCount) : 0;
+            return new SimpleObjectProperty<>(avg);
+        });
+        sharedLosersCol.setReorderable(false);
+        sharedLosersCol.setCellFactory(_ -> styleColumn("-fx-background-color: #e0e0e0;"));
+        return sharedLosersCol;
+    }
+
+    private static TableColumn<PointsRow, Integer> makePlayerCountCol() {
+        TableColumn<PointsRow, Integer> playerCountCol = new TableColumn<>("#P");
+        playerCountCol.setCellFactory(_ -> styleColumn("-fx-background-color: #606c38; -fx-font-weight: bold; -fx-text-fill: #ffffff;"));
+        playerCountCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPlayerCount()));
+        playerCountCol.setReorderable(false);
+        return playerCountCol;
+    }
+
+    private static TableCell<PointsRow, Integer> styleColumn(final String css) {
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.toString());
+                    setStyle(css);
+                }
+            }
+        };
     }
 
     public void setPlayerAmount(int amount) {
