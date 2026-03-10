@@ -1,5 +1,6 @@
 package logo.philist.boardgame_tournament.controller.distribution;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -22,6 +23,7 @@ public class PointDistributionController {
 
     @FXML
     public void initialize() {
+        pointsTable.setFixedCellSize(24); // adjust as needed
     }
 
     @FXML
@@ -70,6 +72,14 @@ public class PointDistributionController {
                 .collect(Collectors.toList());
 
         pointsTable.setItems(FXCollections.observableArrayList(rows));
+
+        pointsTable.prefHeightProperty().unbind();
+        double headerOffset = 30;
+        pointsTable.prefHeightProperty().bind(
+                Bindings.size(pointsTable.getItems())
+                        .multiply(pointsTable.fixedCellSizeProperty())
+                        .add(headerOffset)
+        );
     }
 
     public void setPlayerAmount(int amount) {
