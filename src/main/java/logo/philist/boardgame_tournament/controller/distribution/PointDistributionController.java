@@ -3,10 +3,11 @@ package logo.philist.boardgame_tournament.controller.distribution;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,11 +20,23 @@ public class PointDistributionController {
     @FXML
     private TableView<PointsRow> pointsTable;
 
+    @FXML
+    private Text sharedPointsDisplay;
+
     private int playerAmount = 2;
 
     @FXML
     public void initialize() {
-        pointsTable.setFixedCellSize(24); // adjust as needed
+        pointsTable.setFixedCellSize(24);
+
+        pointsTable.getSelectionModel().setCellSelectionEnabled(true);
+        pointsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        pointsTable.getSelectionModel().getSelectedCells().addListener(
+                (ListChangeListener<TablePosition>) c -> {
+                    calculateSharedPoints(pointsTable.getSelectionModel().getSelectedCells());
+                }
+        );
     }
 
     @FXML
@@ -206,5 +219,84 @@ public class PointDistributionController {
         }
 
         return merged;
+    }
+
+    private void calculateSharedPoints(ObservableList<TablePosition> selectedCells) {
+        if (sharedPointsDisplay == null) return;
+
+        if (isNothingSelected(selectedCells)) return;
+
+        Map<Integer, List<TablePosition>> cellsByRow = selectedCells.stream()
+                .collect(Collectors.groupingBy(TablePosition::getRow));
+
+        if (cellsByRow.isEmpty()) {
+            displaySelectRankText();
+            return;
+        }
+
+        for (Map.Entry<Integer, List<TablePosition>> entry : cellsByRow.entrySet()) {
+            List<TablePosition> positions = entry.getValue();
+
+            if (positions.isEmpty()) continue;
+
+            List<Integer> values = new ArrayList<>();
+            List<String> columnNames = new ArrayList<>();
+
+            for (TablePosition pos : positions) {
+                TableColumn<PointsRow, ?> column = pos.getTableColumn();
+                String columnHeader = column.getText();
+
+                if (columnHeader.equals("#P") || columnHeader.equals("SL")) {
+                    continue;
+                }
+
+                Object cellValue = column.getCellObservableValue(pos.getRow()).getValue();
+                if (cellValue instanceof Integer) {
+                    values.add((Integer) cellValue);
+                    columnNames.add(columnHeader);
+                }
+            }
+
+            if (!isValidSelection(values)) continue;
+
+            int average = calculateAverage(values);
+
+            String placesString = columnNames.getFirst() + " - " + columnNames.getLast();
+            if (columnNames.size() == 1)
+                placesString = columnNames.getFirst();
+
+            sharedPointsDisplay.setText(String.format(
+                    "(%s)\t\t %d points each",
+                    placesString,
+                    average
+            ));
+            break;
+        }
+    }
+
+    private void displaySelectRankText() {
+        sharedPointsDisplay.setText("Select rank cells (#1, #2, etc.)");
+    }
+
+    private boolean isNothingSelected(ObservableList<TablePosition> selectedCells) {
+        if (selectedCells == null || selectedCells.isEmpty()) {
+            sharedPointsDisplay.setText("Select cells to calculate shared points");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidSelection(List<Integer> values) {
+        if (values.isEmpty()) {
+            displaySelectRankText();
+            return false;
+        }
+        return true;
+    }
+
+    private static int calculateAverage(List<Integer> values) {
+        int sum = values.stream().mapToInt(Integer::intValue).sum();
+        int average = sum / values.size();
+        return average;
     }
 }

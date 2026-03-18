@@ -5,17 +5,25 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="logo.philist.boardgame_tournament.controller.distribution.PointDistributionController"
       prefHeight="400.0" prefWidth="600.0">
 
     <TableView fx:id="pointsTable">
-
     </TableView>
 
     <Text text="Shared place or losers (SL) should always be average points for those places rounded down." />
+
+    <!-- Add this section for showing calculated shared points -->
+    <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #fefae0; -fx-border-color: #606c38; -fx-border-width: 1;">
+        <Text text="Shared Points:" style="-fx-font-weight: bold; -fx-font-size: 13;" />
+        <Text fx:id="sharedPointsDisplay"
+              text="Select cells to calculate shared points"
+              style="-fx-font-size: 13; -fx-fill: #283618;" />
+    </HBox>
 
 </VBox>
