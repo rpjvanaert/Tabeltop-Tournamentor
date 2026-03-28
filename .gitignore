@@ -39,3 +39,4 @@ build/
 /games.json
 /players.json
 src/main/java/logo/philist/boardgame_tournament/boardgame_tournament.code-workspace
+/dependency-reduced-pom.xml

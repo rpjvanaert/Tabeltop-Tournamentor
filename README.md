@@ -21,7 +21,7 @@ Shuffling are automatically selected  (but can be changed) based on round number
 
 Build it:
 ```shell
-mvn clena javafx:jlink
+mvn clean javafx:jlink
 ```
 
 Run it:
