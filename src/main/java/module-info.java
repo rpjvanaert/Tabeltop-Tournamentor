@@ -3,7 +3,7 @@ module logo.philist.boardgame_tournament {
     requires javafx.fxml;
     requires javafx.base;
     requires javafx.graphics;
-    requires com.fasterxml.jackson.databind;
+    requires tools.jackson.databind;
     requires com.fasterxml.jackson.annotation;
 
 

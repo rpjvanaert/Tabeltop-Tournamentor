@@ -1,11 +1,11 @@
 package logo.philist.boardgame_tournament.storage;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import logo.philist.boardgame_tournament.model.Game;
 import logo.philist.boardgame_tournament.model.Player;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,7 @@ public class Storage {
     public static void savePlayersObjects(List<Player> players) {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(PLAYERS_PATH), players);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             e.printStackTrace();
         }
 
