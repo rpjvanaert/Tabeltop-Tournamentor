@@ -28,7 +28,7 @@ public class RoundController {
         gameGroupsListView.setCellFactory(_ -> new GameGroupListCell());
         roundsComboBox.setItems(FXCollections.observableArrayList(
                 new PureShuffler(),
-                new PairShuffler(),
+                new SmallGroupShuffler(),
                 new BasicRankShuffler(),
                 new WeightedRankShuffler(),
                 new GroupShuffler()
@@ -52,7 +52,7 @@ public class RoundController {
     public Shuffler determineShuffler(int roundNumber) {
         switch (roundNumber%3) {
             case 1: return new PureShuffler();
-            case 2: return new PairShuffler();
+            case 2: return new SmallGroupShuffler();
             case 0: return new WeightedRankShuffler();
         }
         return new PureShuffler();
