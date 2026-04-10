@@ -33,7 +33,7 @@ class ShufflerTest {
     /**
      * Test that each shuffler:
      * - Uses each game at most once
-     * - Assigns each player at most once (no duplicates)
+     * - Assigns each player exactly once
      * - Completes within the time limit
      */
     @ParameterizedTest(name = "{0}")
@@ -41,10 +41,10 @@ class ShufflerTest {
     void testShufflerConstraints(Shuffler shuffler) {
         // Test with various player and game configurations
         int[][] testCases = {
-                {10, 5},   // 10 players, 5 games
-                {20, 10},  // 20 players, 10 games
-                {15, 8},   // 15 players, 8 games
-                {30, 15},  // 30 players, 15 games
+                {10, 6},   // 10 players, 6 games
+                {20, 12},  // 20 players, 12 games
+                {15, 10},  // 15 players, 10 games
+                {30, 18},  // 30 players, 18 games
         };
 
         for (int[] testCase : testCases) {
@@ -53,7 +53,7 @@ class ShufflerTest {
 
             for (int iteration = 0; iteration < NUM_ITERATIONS; iteration++) {
                 List<Player> players = createPlayers(numPlayers);
-                List<Game> games = createGames(numGames);
+                List<Game> games = createGames(numGames, numPlayers);
 
                 // Measure execution time
                 long startTime = System.nanoTime();
@@ -76,7 +76,7 @@ class ShufflerTest {
                     usedGames.add(game);
                 }
 
-                // Assertion 3: Each player is assigned at most once (no duplicates)
+                // Assertion 3: Each player is assigned exactly once
                 Set<Player> assignedPlayers = new HashSet<>();
                 for (GameGroup group : result) {
                     for (Player player : group.getPlayers()) {
@@ -87,9 +87,10 @@ class ShufflerTest {
                     }
                 }
 
-                // Note: We don't require all players to be assigned, as some shufflers
-                // may not be able to assign everyone due to game constraints
-                // We just ensure no player is assigned more than once
+                // All players must be assigned
+                assertEquals(players.size(), assignedPlayers.size(),
+                        String.format("%s did not assign all players. Expected: %d, Assigned: %d (iteration %d, config: %d players, %d games)",
+                                shuffler, players.size(), assignedPlayers.size(), iteration, numPlayers, numGames));
 
                 // Verify that each group respects game min/max player constraints
                 for (GameGroup group : result) {
@@ -115,7 +116,7 @@ class ShufflerTest {
         // Test with minimal setup
         for (int iteration = 0; iteration < 100; iteration++) {
             List<Player> players = createPlayers(4);
-            List<Game> games = createGames(2);
+            List<Game> games = createGames(3, 4);
 
             long startTime = System.nanoTime();
             List<GameGroup> result = shuffler.shuffle(players, games);
@@ -136,6 +137,11 @@ class ShufflerTest {
                     assignedPlayers.add(player);
                 }
             }
+
+            // All players must be assigned
+            assertEquals(players.size(), assignedPlayers.size(),
+                    String.format("%s did not assign all players in edge case (iteration %d)",
+                            shuffler, iteration));
         }
     }
 
@@ -156,20 +162,30 @@ class ShufflerTest {
     }
 
     /**
-     * Creates test games with varying min/max player counts
+     * Creates test games with varying min/max player counts.
+     * Ensures sufficient capacity to accommodate all players.
      */
-    private List<Game> createGames(int count) {
+    private List<Game> createGames(int count, int totalPlayers) {
         List<Game> games = new ArrayList<>();
 
         // Create games with various player count ranges
-        int[] minPlayers = {2, 2, 3, 4, 2, 3, 2, 4, 3, 2};
-        int[] maxPlayers = {4, 6, 5, 6, 8, 7, 5, 8, 6, 4};
+        // Using patterns that ensure good coverage and capacity
+        int[] minPlayers = {2, 2, 3, 2, 2, 3, 2, 4, 3, 2};
+        int[] maxPlayers = {4, 6, 5, 8, 4, 7, 5, 6, 6, 4};
 
         for (int i = 0; i < count; i++) {
             int minIdx = i % minPlayers.length;
             int min = minPlayers[minIdx];
             int max = maxPlayers[minIdx];
             games.add(new Game("Game" + (i + 1), min, max));
+        }
+
+        // Verify we have sufficient capacity
+        int totalCapacity = games.stream().mapToInt(Game::getMaxPlayers).sum();
+        if (totalCapacity < totalPlayers) {
+            throw new IllegalStateException(
+                    String.format("Insufficient game capacity: %d games can hold max %d players, but need %d",
+                            count, totalCapacity, totalPlayers));
         }
 
         return games;
